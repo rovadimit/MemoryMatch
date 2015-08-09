@@ -14,6 +14,8 @@ var CardIndex = 0; //globalen index, koito sledi tekushtata karta v masiva
 var Score = 0;
 var CardCount = 10;
 
+var GameOver = false;
+
 game.state.add('Boot', bootState);  
 game.state.add('Preload', preloadState);  
 game.state.add('Menu', menuState); 

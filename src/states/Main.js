@@ -102,52 +102,57 @@ var mainState = {
         /*
         kartata si otiva na syotvetnata posoka, samo ako e izbrana nevqrna strelka, pokazva hiksa
         */
-        if (CardIndex != CardCount - 1) {
-            
-            if (this.cardIndexes[1][CardIndex] == true) {
-                var moveDir = game.world.width + game.world.width / 2;
-            }
-            else {
-                var moveDir = - game.world.width / 2;
-            }
-            
-            if ((dir && !this.cardIndexes[1][CardIndex]) || (!dir && this.cardIndexes[1][CardIndex])) {
-                //right - false
-                //HIKS
-                //s chain tween
-                var cross = game.add.sprite(game.world.width / 2, game.world.height / 2, 'cross');
-                cross.tint = 0xffff00;
-                cross.anchor.setTo(0.5, 0.5);
-                cross.scale.setTo(0);
-                var crossTween = game.add.tween(cross.scale).to({x: 3, y: 3}, 200, Phaser.Easing.Linear.None)
-                    .to({x: 0, y: 0}, 200, Phaser.Easing.Linear.None);
-                crossTween.onComplete.add(function() {cross.destroy();});
-                crossTween.start();                
-            }
-            
-            var moveTween = game.add.tween(this.card1).to({x: moveDir}, 300, Phaser.Easing.Linear.None, true, 0);
-            moveTween.onComplete.add(function() {
-                this.card1.loadTexture(
-                    this.cardKeys[this.cardIndexes[0][CardIndex + 1]]);
+        if (!GameOver) {
 
-                this.changeCard();
-            }, this);
-        }
-        else if (CardIndex == CardCount - 1) {
-            //console.log("------------------posledna karta");
-            /*TODO ako e poslednata, q izmestva nastrani, mesti nadolu score-a i go scaleva, izkarva strelkite otstrani 
-            ako izboryt ne e pravilen, izkarva hiksa i premestva v pravilnata posoka
-            */
-            var moveTween = game.add.tween(this.card1).to({x: moveDir}, 300, Phaser.Easing.Linear.None, true, 0);
-            moveTween.onComplete.add(function() {
-                this.card1.destroy();
-                var moveScoreDown = game.add.tween(this.scoreText).to({y: game.world.height / 2 - this.scoreText.height}, 300, Phaser.Easing.Linear.None, true, 0);
-                moveScoreDown.onComplete.add(function() {
-                    game.add.tween(this.scoreText.scale).to({x: 3, y: 3}, 300, Phaser.Easing.Linear.None, true, 0);
+            if (CardIndex != CardCount - 1) {
+                
+                if (this.cardIndexes[1][CardIndex] == true) {
+                    var moveDir = game.world.width + game.world.width / 2;
+                }
+                else {
+                    var moveDir = - game.world.width / 2;
+                }
+                
+                if ((dir && !this.cardIndexes[1][CardIndex]) || (!dir && this.cardIndexes[1][CardIndex])) {
+                    //right - false
+                    //HIKS
+                    //s chain tween
+                    var cross = game.add.sprite(game.world.width / 2, game.world.height / 2, 'cross');
+                    cross.tint = 0xffff00;
+                    cross.anchor.setTo(0.5, 0.5);
+                    cross.scale.setTo(0);
+                    var crossTween = game.add.tween(cross.scale).to({x: 3, y: 3}, 200, Phaser.Easing.Linear.None)
+                        .to({x: 0, y: 0}, 200, Phaser.Easing.Linear.None);
+                    crossTween.onComplete.add(function() {cross.destroy();});
+                    crossTween.start();                
+                }
+                
+                var moveTween = game.add.tween(this.card1).to({x: moveDir}, 300, Phaser.Easing.Linear.None, true, 0);
+                moveTween.onComplete.add(function() {
+                    this.card1.loadTexture(
+                        this.cardKeys[this.cardIndexes[0][CardIndex + 1]]);
+
+                    this.changeCard();
                 }, this);
-                game.add.tween(this.arrowLeft).to({x: - game.world.width / 2}, 300, Phaser.Easing.Linear.None, true, 0);
-                game.add.tween(this.arrowRight).to({x: game.world.width + game.world.width / 2}, 300, Phaser.Easing.Linear.None, true, 0);
-            }, this);
+            }
+            else if (CardIndex == CardCount - 1) {
+                //console.log("------------------posledna karta");
+                /*TODO ako e poslednata, q izmestva nastrani, mesti nadolu score-a i go scaleva, izkarva strelkite otstrani 
+                ako izboryt ne e pravilen, izkarva hiksa i premestva v pravilnata posoka
+                */
+                GameOver = true;
+
+                var moveTween = game.add.tween(this.card1).to({x: moveDir}, 300, Phaser.Easing.Linear.None, true, 0);
+                moveTween.onComplete.add(function() {
+                    this.card1.destroy();
+                    var moveScoreDown = game.add.tween(this.scoreText).to({y: game.world.height / 2 - this.scoreText.height}, 300, Phaser.Easing.Linear.None, true, 0);
+                    moveScoreDown.onComplete.add(function() {
+                        game.add.tween(this.scoreText.scale).to({x: 3, y: 3}, 300, Phaser.Easing.Linear.None, true, 0);
+                    }, this);
+                    game.add.tween(this.arrowLeft).to({x: - game.world.width / 2}, 300, Phaser.Easing.Linear.None, true, 0);
+                    game.add.tween(this.arrowRight).to({x: game.world.width + game.world.width / 2}, 300, Phaser.Easing.Linear.None, true, 0);
+                }, this);
+            }
         }
     },
     
